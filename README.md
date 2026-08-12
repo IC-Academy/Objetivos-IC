@@ -27,3 +27,11 @@ Todos utilizan la contraseña 1234:
 - Colaborador: dante@demo.com
 
 El login consulta una tabla local incluida en el código. No existe conexión con backend, Airtable ni n8n. Las metas, actividades y avances se conservan únicamente en el navegador mediante localStorage.
+
+## Flujos funcionales incluidos
+
+- Dirección crea objetivos SMART con asistente local, selecciona áreas responsables y consulta indicadores ejecutivos por proyecto.
+- Líder convierte el objetivo en actividades, distribuye trabajo a su equipo y solicita recursos de otras áreas.
+- Las asignaciones interárea pasan por una bandeja local de aprobación: aceptar, rechazar o consultar comentarios.
+- Colaborador desglosa su actividad asignada en acciones propias y puede solicitar apoyo especializado.
+- Las solicitudes y avances se conservan localmente para demostrar la trazabilidad completa.
