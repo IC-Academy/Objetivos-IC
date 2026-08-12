@@ -1,4 +1,3 @@
-"use client";
 import {useEffect,useState} from "react";
 type Role="Administrador"|"Dirección"|"Líder"|"Colaborador";
 type Task={id:number,title:string,owner:string,area:string,progress:number,target:string,evidence:boolean,status:string};
