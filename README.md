@@ -16,3 +16,14 @@ No selecciones Jekyll, Static HTML ni una carpeta docs.
 Ejecuta npm install y después npm run dev.
 
 La demo guarda cambios en el navegador. La versión productiva requerirá una base compartida y autenticación.
+
+## Accesos locales de demostración
+
+Todos utilizan la contraseña 1234:
+
+- Administrador: jorge@demo.com
+- Dirección: gabriel@demo.com
+- Líder: daniela@demo.com
+- Colaborador: dante@demo.com
+
+El login consulta una tabla local incluida en el código. No existe conexión con backend, Airtable ni n8n. Las metas, actividades y avances se conservan únicamente en el navegador mediante localStorage.
