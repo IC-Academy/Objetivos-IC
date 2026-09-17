@@ -9,4 +9,5 @@ import "./v3.css";
 import "./demo.css";
 import "./executive.css";
 import "./smart.css";
+import "./proyectos-theme.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /><SmartCreator /></React.StrictMode>);
