@@ -36,3 +36,78 @@
 
 @media(max-width:980px){.v3{grid-template-columns:74px 1fr}.v3 .brand p,.v3 .profile p,.v3 nav button:not(.active){font-size:0}.v3 nav button i{font-size:15px}.v3 .content{padding:20px}.v3 .content>header{margin:-20px -20px 20px;padding:14px 20px}.execMetrics,.execDetailKpis{grid-template-columns:1fr 1fr}.execDetailGrid{grid-template-columns:1fr}}
 @media(max-width:720px){.v3{display:block}.v3 aside{position:relative;width:100%;height:auto}.v3 .content{padding:16px}.v3 .content>header{position:relative;margin:-16px -16px 16px;padding:14px 16px}.execHero{padding:20px}.execHero h2{font-size:22px}.execStatusFilters,.execMetrics,.execDetailKpis{grid-template-columns:1fr}.execObjectiveHead{align-items:flex-start}.execObjectiveFooter{align-items:flex-start;gap:10px;flex-direction:column}.smartFloat{right:16px;bottom:16px}}
+
+/* Executive readability: use the classes rendered by the current dashboard. */
+:root{--font:"Segoe UI",Arial,sans-serif}
+body{font-size:16px;line-height:1.5}
+.v3 .content{padding-bottom:110px}
+.v3 .content>header.appHeader{background:var(--navy-900);position:relative;gap:20px;flex-wrap:wrap}
+.v3 .content>header.appHeader h1{font-size:28px;line-height:1.2}
+.v3 .content>header.appHeader small{font-size:14px}
+.v3 .content>header.appHeader p{font-size:16px}
+.execPage{gap:20px;min-width:0}
+.execFilters{padding:18px;margin-bottom:0;gap:16px}
+.execFilters label{font-size:14px;color:#43516a;display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:0}
+.execFilters select{width:100%;min-width:0;font-size:16px;color:#071a35;padding:10px 12px;min-height:44px}
+.healthFilters{gap:12px}
+.healthFilters button{font-size:16px;padding:16px 20px;gap:12px;min-width:0;flex-wrap:wrap;line-height:1.3}
+.healthFilters button span{font-size:34px;font-variant-numeric:tabular-nums}
+.execIntro{padding:24px;gap:24px}
+.execIntro>div{min-width:0}
+.execIntro span{font-size:14px;letter-spacing:.08em}
+.execIntro h2{font-size:28px;line-height:1.25;margin:8px 0}
+.execIntro p{font-size:16px;color:#4d5872;margin:0}
+.execIntro>strong{font-size:44px;line-height:1.2;flex-shrink:0}
+.execIntro>strong small{font-size:14px;color:#4d5872;margin-top:6px}
+.objectiveRows{gap:20px}
+.execObjective{grid-template-columns:minmax(260px,1.3fr) minmax(170px,.8fr) minmax(170px,.8fr) minmax(230px,1fr);gap:16px;padding:18px;overflow:visible}
+.execObjective>*{min-width:0}
+.objectiveIdentity{padding:16px;border-radius:10px}
+.objectiveIdentity>span{font-size:14px;padding:5px 10px}
+.objectiveIdentity h3{font-size:20px;line-height:1.4;margin:12px 0}
+.objectiveIdentity small{font-size:14px;line-height:1.5;color:#4d5872;display:block}
+.metricCard,.resultCard{margin:0;padding:18px;gap:6px}
+.metricCard small,.resultCard small{font-size:14px;color:#4d5872}
+.metricCard b{font-size:34px;line-height:1.2;font-variant-numeric:tabular-nums;margin:4px 0}
+.metricCard b em{display:block;font-size:14px;font-weight:600;color:#4d5872;margin-top:6px}
+.metricCard span,.resultCard span{font-size:14px;line-height:1.5;color:#43516a}
+.resultCard b{font-size:22px;line-height:1.3}
+.resultCard.ok b{color:#087449}.resultCard.warn b{color:#925b00}.resultCard.bad b{color:#b42318}
+.resultCard b::before{display:inline-block;margin-right:8px}
+.resultCard.ok b::before{content:"✓"}.resultCard.warn b::before{content:"!"}.resultCard.bad b::before{content:"×"}
+.resultCard>div{height:12px;margin-top:12px}
+.resultCard.ok>div i{background:#087449}.resultCard.warn>div i{background:#b87400}.resultCard.bad>div i{background:#c9322a}
+.detailBtn{grid-column:1/-1;justify-self:end;border:1px solid #cbd2df;border-radius:8px;font-size:16px;padding:10px 18px;min-height:44px;color:#123165}
+.execPage button:focus-visible,.execPage select:focus-visible{outline:3px solid #1e63d0;outline-offset:3px}
+/* The detail view must remain readable when an objective is opened. */
+.backBtn,.openSelected{font-size:16px;padding:10px 14px}
+.detailHero{padding:24px}.detailHero span{font-size:24px}.detailHero h2{font-size:20px;line-height:1.4}.detailHero p{font-size:16px}
+.statusPill{font-size:16px}.miniK small{font-size:14px;color:#4d5872}.miniK b{font-size:32px}
+.sectionTitle{font-size:18px;padding:12px 16px}.trendLegend{font-size:14px;flex-wrap:wrap}
+.areaLine>div:first-child{font-size:16px;gap:12px}.contextCard small{font-size:14px;color:#4d5872}.contextCard b{font-size:16px}
+.smartFloat{font-size:16px;max-width:calc(100vw - 32px);white-space:normal}
+@media(max-width:1550px){
+ .execObjective{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .objectiveIdentity{grid-column:1/-1}
+}
+@media(max-width:1100px){
+ .execFilters{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .execObjective{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .resultCard{grid-column:1/-1}
+ .healthFilters{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+ .execFilters{grid-template-columns:1fr}
+ .execIntro{align-items:flex-start;flex-direction:column;padding:20px}
+ .execIntro>strong{text-align:left;font-size:38px}
+ .execIntro h2{font-size:24px}
+ .execObjective{grid-template-columns:minmax(0,1fr);padding:12px;gap:12px}
+ .metricCard,.resultCard{margin:0;padding:16px}
+ .healthFilters button{padding:12px;font-size:15px;gap:6px}
+ .healthFilters button span{font-size:30px}
+ .detailBtn{width:100%;justify-self:stretch}
+ .detailKpis,.leaderKpis{grid-template-columns:1fr}
+ .detailHero{grid-template-columns:minmax(0,1fr)}
+ .smartFloat{right:16px!important;bottom:16px!important}
+ .smartFloat:before{content:none}
+}
