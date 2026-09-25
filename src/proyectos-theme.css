@@ -38,7 +38,7 @@
 @media(max-width:720px){.v3{display:block}.v3 aside{position:relative;width:100%;height:auto}.v3 .content{padding:16px}.v3 .content>header{position:relative;margin:-16px -16px 16px;padding:14px 16px}.execHero{padding:20px}.execHero h2{font-size:22px}.execStatusFilters,.execMetrics,.execDetailKpis{grid-template-columns:1fr}.execObjectiveHead{align-items:flex-start}.execObjectiveFooter{align-items:flex-start;gap:10px;flex-direction:column}.smartFloat{right:16px;bottom:16px}}
 
 /* Executive readability: use the classes rendered by the current dashboard. */
-:root{--font:"Segoe UI",Arial,sans-serif}
+:root{--font:"Inter","Segoe UI",Arial,sans-serif}
 body{font-size:16px;line-height:1.5}
 .v3 .content{padding-bottom:110px}
 .v3 .content>header.appHeader{background:var(--navy-900);position:relative;gap:20px;flex-wrap:wrap}
@@ -110,4 +110,80 @@ body{font-size:16px;line-height:1.5}
  .detailHero{grid-template-columns:minmax(0,1fr)}
  .smartFloat{right:16px!important;bottom:16px!important}
  .smartFloat:before{content:none}
+}
+
+
+/* ===== Executive visibility pass: larger, faster-to-scan typography ===== */
+body{font-family:var(--font);font-size:17px}
+.v3 .brand p{font-size:16px;letter-spacing:.04em}
+.v3 .brand span{font-size:12px}
+.v3 .profile p{font-size:14px;font-weight:700}
+.v3 .profile span{font-size:12px}
+.v3 nav button{font-size:15px;font-weight:600;min-height:46px}
+.v3 .resetDemo,.v3 .logout{font-size:14px;min-height:42px}
+
+.v3 .content>header.appHeader small{font-size:15px!important;letter-spacing:.08em}
+.v3 .content>header.appHeader h1{font-size:30px!important}
+.v3 .content>header.appHeader p{font-size:17px!important;font-weight:500}
+.headerMark{width:72px;height:72px;font-size:28px}
+.headerMark span{font-size:8px}
+
+.execFilters label{font-size:15px;font-weight:700}
+.execFilters select{font-size:16px;font-weight:600;min-height:46px}
+.healthFilters button{font-size:17px;font-weight:700;min-height:74px}
+.healthFilters button span{font-size:36px;font-weight:800}
+
+.execIntro span{font-size:15px}
+.execIntro h2{font-size:30px}
+.execIntro p{font-size:17px;line-height:1.5}
+.execIntro>strong{font-size:48px}
+.execIntro>strong small{font-size:15px}
+
+.objectiveIdentity>span{font-size:15px;padding:6px 11px}
+.objectiveIdentity h3{font-size:22px;line-height:1.45}
+.objectiveIdentity small{font-size:15px;line-height:1.55;font-weight:500}
+
+.metricCard small,.resultCard small{font-size:15px;font-weight:600}
+.metricCard b{font-size:38px}
+.metricCard b em{font-size:15px}
+.metricCard span,.resultCard span{font-size:15px;font-weight:500}
+.resultCard b{font-size:24px}
+.detailBtn{font-size:17px;font-weight:700}
+
+.pageHero span{font-size:15px}
+.pageHero h2{font-size:28px}
+.pageHero p{font-size:17px;line-height:1.5}
+.objectiveCard span,.objectiveCard em,.alertList em{font-size:13px}
+.objectiveCard h3{font-size:20px}
+.objectiveCard p{font-size:16px;line-height:1.5}
+.objectiveCard footer b{font-size:28px}
+.objectiveCard footer span{font-size:14px}
+
+.backBtn,.openSelected{font-size:17px}
+.detailHero span{font-size:26px}
+.detailHero h2{font-size:22px}
+.detailHero p{font-size:16px}
+.statusPill{font-size:16px}
+.miniK small{font-size:15px}
+.miniK b{font-size:34px}
+.sectionTitle{font-size:19px}
+.trendLegend{font-size:15px}
+.areaLine>div:first-child{font-size:17px}
+.contextCard small{font-size:15px}
+.contextCard b{font-size:17px;line-height:1.5}
+
+.orgPerson h3{font-size:18px}
+.orgPerson>span{font-size:14px}
+.orgPerson>b{font-size:16px}
+.orgPerson em{font-size:13px}
+.alertList b{font-size:17px}
+.alertList small{font-size:14px;line-height:1.4}
+.alertList strong{font-size:17px}
+
+.smartFloat{font-size:17px;font-weight:700;padding:12px 20px}
+
+@media(max-width:1200px){
+  .objectiveIdentity h3{font-size:20px}
+  .metricCard b{font-size:34px}
+  .resultCard b{font-size:22px}
 }
