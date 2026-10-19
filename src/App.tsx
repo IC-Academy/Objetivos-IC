@@ -1,3 +1,4 @@
+import {DirectionCascadeDemo,LeaderCascadeDemo} from "./CascadeModel";
 import {FormEvent,useEffect,useMemo,useState} from "react";
 
 type Role="Administrador"|"Dirección"|"Líder"|"Colaborador";
@@ -10,7 +11,9 @@ const U:User[]=[
  {id:"u1",name:"Jorge Mejía",email:"jorge@demo.com",password:"1234",role:"Administrador",area:"Inteligencia de Negocios",leader:"Armando Acosta"},
  {id:"u2",name:"Gabriel Sabogal",email:"gabriel@demo.com",password:"1234",role:"Dirección",area:"Dirección General",leader:"—"},
  {id:"u3",name:"Armando Acosta",email:"armando@demo.com",password:"1234",role:"Líder",area:"Finanzas",leader:"Gabriel Sabogal"},
- {id:"u4",name:"Dante",email:"dante@demo.com",password:"1234",role:"Colaborador",area:"Ventas",leader:"Daniela Juárez"}
+ {id:"u4",name:"Dante",email:"dante@demo.com",password:"1234",role:"Colaborador",area:"Ventas",leader:"Daniela Juárez"},
+ {id:"u5",name:"Diana López",email:"diana@demo.com",password:"1234",role:"Líder",area:"Calidad, Seguridad y Medio Ambiente",leader:"Dirección"},
+ {id:"u6",name:"Juan Carlos Pérez",email:"juan.carlos@demo.com",password:"1234",role:"Líder",area:"Operaciones",leader:"Dirección"}
 ];
 
 const P:Project[]=[
@@ -77,9 +80,9 @@ export default function App(){
  const logout=()=>{localStorage.removeItem("oc-session");setUser(null)};
  return <main className="v3"><aside><div className="brand"><b>IC</b><p>INTER-CON<span>OBJETIVOS EN CASCADA</span></p></div><div className="profile"><b>{user.name.split(" ").map(x=>x[0]).slice(0,2).join("")}</b><p>{user.name}<span>{user.role} · {user.area}</span></p></div><nav>{nav[user.role].map((x,i)=><button key={x} className={page===x?"active":""} onClick={()=>{setPage(x);setDetail(false)}}><i>{["▦","◎","♙","⚑"][i]}</i>{x}</button>)}</nav><button className="resetDemo" onClick={resetDemo}>↻ Restablecer datos demo</button><button className="logout" onClick={logout}>Cerrar sesión</button></aside>
  <section className="content"><header className="appHeader"><div><small>FY 2026 · {page.toUpperCase()}</small><h1>{user.role==="Dirección"?"Objetivos Generales 2025–2026":user.role==="Líder"?"Gestión de objetivos":"Portal de objetivos"}</h1><p>{user.role==="Dirección"?"Visión ejecutiva, tendencia y responsables":"Seguimiento de objetivos en cascada"}</p></div>{user.role==="Dirección"&&<div className="headerMark">IC<span>INTER-CON</span></div>}</header>
- {user.role==="Dirección"&&<Director projects={projects} tasks={tasks} project={project} selected={selected} setSelected={setSelected} page={page} filter={filter} setFilter={setFilter} detail={detail} setDetail={setDetail}/>} 
+ {user.role==="Dirección"&&<DirectionCascadeDemo page={page}/>} 
  {user.role==="Administrador"&&<Admin projects={projects}/>} 
- {user.role==="Líder"&&<Leader projects={projects} tasks={tasks}/>} 
+ {user.role==="Líder"&&<LeaderCascadeDemo userName={user.name}/>} 
  {user.role==="Colaborador"&&<Worker projects={projects} tasks={tasks}/>} 
  </section>{toast&&<div className="toast">✓ {toast}</div>}</main>
 }
