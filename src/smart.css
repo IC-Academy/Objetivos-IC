@@ -22,3 +22,20 @@
  .smartAreas button{font-size:13px}
 }
 @media(max-width:480px){.smartAreas{grid-template-columns:1fr}}
+
+.smartAiPanel{margin:16px 0 2px;padding:16px 18px;border:1px solid #d8cdfa;border-radius:12px;background:linear-gradient(180deg,#faf8ff,#f5f1ff)}
+.smartAiHead{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:12px}
+.smartAiHead span{font-size:10px;letter-spacing:.08em;font-weight:800;color:#6a4bb7}
+.smartAiHead b{font-size:15px;color:#2f2254;text-align:right}
+.smartAiProposal{background:#fff;border:1px solid #e2dcf5;border-radius:10px;padding:13px}
+.smartAiProposal>small{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:#7b6d9d}
+.smartAiProposal p{font-size:14px;line-height:1.55;color:#2d3650;margin:6px 0 12px}
+.smartAiProposal>div{display:grid;grid-template-columns:1fr 150px;gap:10px}
+.smartAiProposal span{display:block;background:#f8f6ff;border-radius:8px;padding:9px 10px;font-size:12px;color:#5e5475}
+.smartAiProposal span b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:#6a4bb7;margin-bottom:3px}
+.smartAiPanel ul{margin:11px 0 12px;padding-left:20px;color:#665c7d}
+.smartAiPanel li{font-size:12px;line-height:1.45;margin:4px 0}
+.smartAiPanel>button{border:1px solid #cdbef8;background:#6a4bb7;color:#fff;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:750;cursor:pointer}
+.smartAiPanel>button:hover{background:#5a3fa2}
+.smartActions .smartAiBtn:disabled{opacity:.65;cursor:wait}
+@media(max-width:760px){.smartAiHead{flex-direction:column}.smartAiHead b{text-align:left}.smartAiProposal>div{grid-template-columns:1fr}}
