@@ -24,6 +24,7 @@ type Objective={
   notes?:string;
   children?:string[];
   secondaryReason?:string;
+  assignees?:string[];
 };
 type Person={name:string;role:string;branch:string;objectiveIds:string[];children?:Person[]};
 
@@ -200,18 +201,66 @@ export function LeaderCascadeDemo({userName}:{userName:string}){
  const [openCreator,setOpenCreator]=useState(false);
  const [newTitle,setNewTitle]=useState("");
  const [newDescription,setNewDescription]=useState("");
+ const [newIndicator,setNewIndicator]=useState("");
+ const [newBase,setNewBase]=useState(0);
  const [newTarget,setNewTarget]=useState(100);
+ const [newUnit,setNewUnit]=useState("%");
+ const [newDeadline,setNewDeadline]=useState("2027-09-30");
  const [newExpected,setNewExpected]=useState(0);
+ const [assignees,setAssignees]=useState<string[]>([]);
+ const [aiText,setAiText]=useState("");
+ const [aiBusy,setAiBusy]=useState(false);
 
  const companyCounts={pending:STRATEGIC.filter(x=>health(x)==="Sin dato").length};
 
+ const fallbackReports:Record<string,string[]>={
+  "Diana López":["Benjamín Gudiño","Andrea Gutiérrez","Mayra Martínez","Omar Cortés"],
+  "Juan Carlos Pérez":["Yuseff Mora","Concepción Luna","Karla Vibriezca","Víctor Sánchez","Manuel Nolasco"],
+  "Armando Acosta":["Fernando Aviña","Jorge Martínez","Maricela Fragoso","Frances Fernández","Roberto Vega","Jorge Mejía"]
+ };
+ const orgRows=useMemo(()=>{try{return JSON.parse(localStorage.getItem("oc-org")||"[]")}catch{return []}},[openCreator]);
+ const directReports:string[]=useMemo(()=>{
+  const fromOrg=Array.isArray(orgRows)?orgRows.filter((x:any)=>x.manager===userName&&!x.vacant).map((x:any)=>x.name):[];
+  return fromOrg.length?fromOrg:(fallbackReports[userName]||[]);
+ },[orgRows,userName]);
+
+ const smartScore=useMemo(()=>[
+  newTitle.trim().length>3,
+  newDescription.trim().length>15,
+  newIndicator.trim().length>2,
+  newBase!==newTarget,
+  Boolean(newDeadline),
+  assignees.length>0
+ ].filter(Boolean).length*100/6,[newTitle,newDescription,newIndicator,newBase,newTarget,newDeadline,assignees]);
+
+ const improveAreaGoal=()=>{
+  setAiBusy(true);
+  window.setTimeout(()=>{
+   const title=newTitle.trim()||"Mejorar el resultado del área";
+   const indicator=newIndicator.trim()||("% de cumplimiento de "+title.toLowerCase());
+   const people=assignees.length?assignees.join(", "):"el equipo responsable";
+   const text=title+", pasando de "+newBase+" a "+newTarget+" "+newUnit+", medido mediante "+indicator+", con fecha límite "+newDeadline+" y responsabilidad de "+people+".";
+   setAiText(text);
+   if(!newIndicator.trim())setNewIndicator(indicator);
+   setAiBusy(false);
+  },420);
+ };
+
+ const applyAi=()=>{if(aiText)setNewDescription(aiText)};
+ const toggleAssignee=(name:string)=>setAssignees(xs=>xs.includes(name)?xs.filter(x=>x!==name):[...xs,name]);
+
  const createAreaGoal=(e:any)=>{
   e.preventDefault();
-  if(!newTitle.trim()||!newDescription.trim())return;
+  if(smartScore<80)return;
   const id="AREA-"+String(areaGoals.length+1).padStart(2,"0");
-  const goal:Objective={id,title:newTitle.trim(),description:newDescription.trim(),class:"Secundario",owner:userName,branch:areaName,progress:0,expected:newExpected,areas:[areaName],secondaryReason:"Objetivo propio del área; no impacta directamente un objetivo estratégico de Dirección.",targetText:String(newTarget),hasData:true};
+  const goal:Objective={
+   id,title:newTitle.trim(),description:newDescription.trim(),class:"Secundario",owner:userName,branch:areaName,
+   progress:0,expected:newExpected,areas:[areaName],assignees,
+   secondaryReason:"Objetivo propio del área; no impacta directamente un objetivo estratégico de Dirección.",
+   targetText:newTarget+" "+newUnit,indicator:newIndicator,frequency:"Seguimiento definido por el líder",hasData:true
+  };
   setAreaGoals(xs=>[...xs,goal]);
-  setNewTitle("");setNewDescription("");setNewTarget(100);setNewExpected(0);setOpenCreator(false);
+  setNewTitle("");setNewDescription("");setNewIndicator("");setNewBase(0);setNewTarget(100);setNewUnit("%");setNewDeadline("2027-09-30");setNewExpected(0);setAssignees([]);setAiText("");setOpenCreator(false);
  };
 
  return <div className="cmPage">
@@ -254,12 +303,37 @@ export function LeaderCascadeDemo({userName}:{userName:string}){
   </section>
 
   {openCreator&&<div className="cmLeaderModalBackdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setOpenCreator(false)}}>
-   <form className="cmLeaderModal" onSubmit={createAreaGoal}>
-    <div className="cmLeaderModalHead"><div><span>OBJETIVO DEL ÁREA</span><h3>Crear objetivo propio</h3><p>No impactará el avance estratégico de Dirección.</p></div><button type="button" onClick={()=>setOpenCreator(false)}>×</button></div>
-    <label>Nombre del objetivo<input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="Ej. Mejorar cumplimiento de auditorías" required/></label>
-    <label>¿Qué se quiere lograr?<textarea value={newDescription} onChange={e=>setNewDescription(e.target.value)} placeholder="Describe el resultado que el área debe alcanzar" required/></label>
-    <div className="cmLeaderModalGrid"><label>Meta<input type="number" value={newTarget} onChange={e=>setNewTarget(+e.target.value)}/></label><label>Avance esperado inicial<input type="number" value={newExpected} onChange={e=>setNewExpected(+e.target.value)}/></label></div>
-    <div className="cmLeaderModalActions"><button type="button" onClick={()=>setOpenCreator(false)}>Cancelar</button><button type="submit">Crear objetivo del área</button></div>
+   <form className="cmLeaderModal smartLeaderModal" onSubmit={createAreaGoal}>
+    <div className="cmLeaderModalHead"><div><span>OBJETIVO DEL ÁREA · SMART</span><h3>Crear y asignar objetivo</h3><p>Define el resultado, valida la redacción SMART y selecciona responsables de tu estructura.</p></div><button type="button" onClick={()=>setOpenCreator(false)}>×</button></div>
+
+    <div className="leaderSmartScore"><b>{Math.round(smartScore)}/100</b><div><i style={{width:Math.min(100,smartScore)+"%"}}/></div><span>{smartScore>=80?"Listo para crear":"Completa los criterios SMART"}</span></div>
+
+    <label>Nombre ejecutivo del objetivo<input value={newTitle} onChange={e=>{setNewTitle(e.target.value);setAiText("")}} placeholder="Ej. Mejorar cumplimiento de auditorías" required/></label>
+    <label>¿Qué se quiere lograr?<textarea value={newDescription} onChange={e=>setNewDescription(e.target.value)} placeholder="Describe el resultado concreto que el área debe alcanzar" required/></label>
+
+    <div className="cmLeaderModalGrid">
+     <label>Indicador<input value={newIndicator} onChange={e=>setNewIndicator(e.target.value)} placeholder="Ej. % de auditorías cumplidas"/></label>
+     <label>Unidad<input value={newUnit} onChange={e=>setNewUnit(e.target.value)} placeholder="%"/></label>
+    </div>
+    <div className="cmLeaderModalGrid three">
+     <label>Base<input type="number" value={newBase} onChange={e=>setNewBase(+e.target.value)}/></label>
+     <label>Meta<input type="number" value={newTarget} onChange={e=>setNewTarget(+e.target.value)}/></label>
+     <label>Fecha límite<input type="date" value={newDeadline} onChange={e=>setNewDeadline(e.target.value)}/></label>
+    </div>
+
+    <section className="leaderPeopleSection">
+     <div className="leaderPeopleHead"><div><span>RESPONSABLES DEL OBJETIVO</span><h4>Selecciona personal de tu estructura</h4><p>Se muestran únicamente tus reportes directos conforme al organigrama. Ellos podrán distribuirlo hacia abajo si tienen equipo.</p></div><b>{assignees.length}<small>seleccionados</small></b></div>
+     <div className="leaderPeopleGrid">{directReports.map(name=>{const on=assignees.includes(name);return <button type="button" key={name} className={on?"on":""} onClick={()=>toggleAssignee(name)}><i>{on?"✓":"+"}</i><span>{name}</span></button>})}</div>
+     {!directReports.length&&<div className="cmEmptyGoals"><b>Sin reportes directos configurados</b><span>El administrador debe completar la relación de jefe directo en la estructura.</span></div>}
+    </section>
+
+    {aiText&&<section className="leaderAiBox"><span>✦ MINI IA SMART</span><h4>Propuesta de redacción</h4><p>{aiText}</p><button type="button" onClick={applyAi}>Aplicar propuesta</button></section>}
+
+    <div className="cmLeaderModalActions">
+     <button type="button" onClick={()=>setOpenCreator(false)}>Cancelar</button>
+     <button type="button" className="leaderAiBtn" onClick={improveAreaGoal} disabled={aiBusy}>{aiBusy?"✦ Analizando…":"✦ Mejorar con IA"}</button>
+     <button type="submit" disabled={smartScore<80}>Crear y asignar objetivo</button>
+    </div>
    </form>
   </div>}
  </div>
