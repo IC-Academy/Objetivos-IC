@@ -96,13 +96,80 @@ export function DirectionCascadeDemo({page}:{page:string}){
 
 export function LeaderCascadeDemo({userName}:{userName:string}){
  const isDiana=userName==="Diana López";
- const principal=isDiana?[STRATEGIC[4]]:userName==="Juan Carlos Pérez"?[STRATEGIC[0],STRATEGIC[3]]:STRATEGIC.filter(x=>x.areas.includes("Finanzas"));
- const secondary=isDiana?SECONDARY.filter(x=>x.branch.startsWith("Calidad")):userName==="Juan Carlos Pérez"?SECONDARY.filter(x=>x.branch.startsWith("Operaciones")):SECONDARY.slice(0,2);
+ const areaName=isDiana?"Calidad, Seguridad y Medio Ambiente":userName==="Juan Carlos Pérez"?"Operaciones":"Finanzas";
+ const contributes=isDiana?[STRATEGIC[4],DERIVED[2]]:userName==="Juan Carlos Pérez"?[STRATEGIC[0],STRATEGIC[3],DERIVED[0],DERIVED[1]]:STRATEGIC.filter(x=>x.areas.includes("Finanzas"));
+ const initialAreaGoals=isDiana?SECONDARY.filter(x=>x.branch.startsWith("Calidad")):userName==="Juan Carlos Pérez"?SECONDARY.filter(x=>x.branch.startsWith("Operaciones")):SECONDARY.slice(0,2);
+ const [areaGoals,setAreaGoals]=useState<Objective[]>(initialAreaGoals);
+ const [openCreator,setOpenCreator]=useState(false);
+ const [newTitle,setNewTitle]=useState("");
+ const [newDescription,setNewDescription]=useState("");
+ const [newTarget,setNewTarget]=useState(100);
+ const [newExpected,setNewExpected]=useState(0);
+ const globalAvg=Math.round(STRATEGIC.reduce((s,x)=>s+x.progress,0)/STRATEGIC.length);
+ const companyCounts={
+  ok:STRATEGIC.filter(x=>health(x)==="En tiempo").length,
+  risk:STRATEGIC.filter(x=>health(x)==="En riesgo").length,
+  bad:STRATEGIC.filter(x=>health(x)==="Crítico").length
+ };
+ const createAreaGoal=(e:any)=>{
+  e.preventDefault();
+  if(!newTitle.trim()||!newDescription.trim())return;
+  const id="AREA-"+String(areaGoals.length+1).padStart(2,"0");
+  const goal:Objective={id,title:newTitle.trim(),description:newDescription.trim(),class:"Secundario",owner:userName,branch:areaName,progress:0,expected:newExpected,areas:[areaName],secondaryReason:"Objetivo propio del área; no impacta directamente un objetivo estratégico de Dirección."};
+  setAreaGoals(xs=>[...xs,goal]);
+  setNewTitle("");setNewDescription("");setNewTarget(100);setNewExpected(0);setOpenCreator(false);
+ };
+
  return <div className="cmPage">
-  <Hero eyebrow="MI ÁREA" title={isDiana?"Calidad, Seguridad y Medio Ambiente":userName==="Juan Carlos Pérez"?"Operaciones":"Gestión del líder"} text="El líder recibe objetivos estratégicos sólo cuando su rama participa y crea secundarios para cubrir el resto de su estructura."/>
-  <div className="cmLeaderSummary"><b>{principal.length}<span>estratégicos / derivados</span></b><b>{secondary.length}<span>secundarios</span></b><b>100%<span>ramas con objetivo</span></b></div>
-  <section className="cmLeaderGroup"><div className="cmSectionHead"><div><span>PRIORIDAD ESTRATÉGICA</span><h3>Objetivos que vienen de Dirección</h3></div></div>{principal.map(o=><ObjCard key={o.id} o={o} onOpen={()=>{}}/>)}</section>
-  <section className="cmLeaderGroup"><div className="cmSectionHead"><div><span>GESTIÓN DEL ÁREA</span><h3>Objetivos secundarios</h3></div><small>Se asignan a las ramas que no participan en los principales.</small></div>{secondary.map(o=><ObjCard key={o.id} o={o} onOpen={()=>{}}/>)}</section>
+  <Hero eyebrow="MI ÁREA" title={areaName} text="Gestiona la contribución del área a la estrategia y sus objetivos internos, manteniendo visibilidad ejecutiva del avance global de la empresa."/>
+
+  <section className="cmCompanyPulse">
+   <div className="cmCompanyPulseHead">
+    <div><span>VISIÓN GLOBAL DE LA EMPRESA</span><h3>Avance de objetivos de Dirección</h3><p>Resumen ejecutivo para líderes. Sin detalle operativo ni acceso a la cascada de otras áreas.</p></div>
+    <b>{globalAvg}%<small>avance global</small></b>
+   </div>
+   <div className="cmCompanyPulseStats">
+    <article><strong>{STRATEGIC.length}</strong><span>objetivos Dirección</span></article>
+    <article className="ok"><strong>{companyCounts.ok}</strong><span>en tiempo</span></article>
+    <article className="warn"><strong>{companyCounts.risk}</strong><span>en riesgo</span></article>
+    <article className="bad"><strong>{companyCounts.bad}</strong><span>críticos</span></article>
+   </div>
+   <div className="cmCompanyMiniList">
+    {STRATEGIC.map(o=><div key={o.id}><span>{o.title}</span><i><em className={tone(health(o))} style={{width:o.progress+"%"}}/></i><b>{o.progress}%</b><small className={tone(health(o))}>{health(o)}</small></div>)}
+   </div>
+  </section>
+
+  <div className="cmLeaderSummary">
+   <b>{contributes.length}<span>alineados a Dirección</span></b>
+   <b>{areaGoals.length}<span>objetivos propios del área</span></b>
+   <b>100%<span>ramas con objetivo</span></b>
+  </div>
+
+  <section className="cmLeaderGroup">
+   <div className="cmSectionHead">
+    <div><span>CONTRIBUCIÓN A DIRECCIÓN</span><h3>Objetivos que afectan los resultados estratégicos</h3></div>
+    <small>Provienen de Dirección o son derivados de ellos.</small>
+   </div>
+   {contributes.map(o=><ObjCard key={o.id} o={o} onOpen={()=>{}}/>)}
+  </section>
+
+  <section className="cmLeaderGroup">
+   <div className="cmSectionHead">
+    <div><span>GESTIÓN DEL ÁREA</span><h3>Objetivos propios del área</h3><p>Necesidades internas, continuidad, cumplimiento o mejora. No alteran el avance de Dirección.</p></div>
+    <button type="button" className="cmAddAreaGoal" onClick={()=>setOpenCreator(true)}>＋ Nuevo objetivo del área</button>
+   </div>
+   {areaGoals.length?areaGoals.map(o=><ObjCard key={o.id} o={o} onOpen={()=>{}}/>):<div className="cmEmptyGoals"><b>Sin objetivos propios del área</b><span>Agrega los necesarios para cubrir la operación y las responsabilidades internas.</span></div>}
+  </section>
+
+  {openCreator&&<div className="cmLeaderModalBackdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setOpenCreator(false)}}>
+   <form className="cmLeaderModal" onSubmit={createAreaGoal}>
+    <div className="cmLeaderModalHead"><div><span>OBJETIVO DEL ÁREA</span><h3>Crear objetivo propio</h3><p>No impactará el avance estratégico de Dirección.</p></div><button type="button" onClick={()=>setOpenCreator(false)}>×</button></div>
+    <label>Nombre del objetivo<input value={newTitle} onChange={e=>setNewTitle(e.target.value)} placeholder="Ej. Mejorar cumplimiento de auditorías" required/></label>
+    <label>¿Qué se quiere lograr?<textarea value={newDescription} onChange={e=>setNewDescription(e.target.value)} placeholder="Describe el resultado que el área debe alcanzar" required/></label>
+    <div className="cmLeaderModalGrid"><label>Meta<input type="number" value={newTarget} onChange={e=>setNewTarget(+e.target.value)}/></label><label>Avance esperado inicial<input type="number" value={newExpected} onChange={e=>setNewExpected(+e.target.value)}/></label></div>
+    <div className="cmLeaderModalActions"><button type="button" onClick={()=>setOpenCreator(false)}>Cancelar</button><button type="submit">Crear objetivo del área</button></div>
+   </form>
+  </div>}
  </div>
 }
 
