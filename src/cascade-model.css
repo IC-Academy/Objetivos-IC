@@ -38,3 +38,24 @@
 .cmLeaderModalActions button{border:1px solid #dce4ed;background:#fff;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:700;cursor:pointer}
 .cmLeaderModalActions button[type="submit"]{background:#176bcf;border-color:#176bcf;color:#fff}
 @media(max-width:760px){.cmCompanyPulseHead{flex-direction:column}.cmCompanyPulseHead>b{text-align:left}.cmCompanyPulseStats{grid-template-columns:1fr 1fr}.cmCompanyMiniList>div{grid-template-columns:1fr 60px 86px}.cmCompanyMiniList i{grid-column:1/-1;grid-row:2}.cmLeaderModalGrid{grid-template-columns:1fr}.cmLeaderModalBackdrop{padding:10px}.cmSectionHead{align-items:flex-start}.cmAddAreaGoal{width:100%}}
+
+/* Production polish: official FY2027 portfolio */
+.cmObjective.neutral{border-left-color:#8492a6}
+.cmState.neutral b{color:#55657a}
+.cmState.neutral i{background:#e8edf3}
+.cmState.neutral em{background:#a6b1bf}
+.cmStatus .neutral b{color:#55657a}
+.cmTile>em.neutral{background:#edf1f5;color:#5f6e82}
+.cmCompanyPulseStats article.neutral strong{color:#55657a}
+.cmCompanyMiniList i em.neutral{background:#a6b1bf}
+.cmCompanyMiniList small.neutral{background:#edf1f5;color:#5f6e82}
+.cmTextMetric{font-size:20px!important;line-height:1.25!important}
+.cmTileText{font-size:14px!important;color:#176bcf!important}
+.cmDetailText{font-size:19px!important;line-height:1.25!important}
+.cmKpiSheet{background:#fff;border:1px solid #dfe4ec;border-radius:16px;overflow:hidden}
+.cmKpiSheet>div{display:grid;grid-template-columns:210px minmax(0,1fr);gap:18px;padding:15px 18px;border-bottom:1px solid #e8edf3;align-items:start}
+.cmKpiSheet>div:last-child{border-bottom:0}
+.cmKpiSheet span{font-size:12px;font-weight:800;letter-spacing:.05em;color:#64748b}
+.cmKpiSheet b{font-size:15px;line-height:1.5;color:#14253f;font-weight:650}
+.cmComplementStats button:disabled{opacity:.45;cursor:not-allowed}
+@media(max-width:760px){.cmKpiSheet>div{grid-template-columns:1fr;gap:5px}}
