@@ -108,6 +108,12 @@ export default function OrganizationAdmin({page}:{page:string}){
  const [q,setQ]=useState("");
  const [area,setArea]=useState("Todas");
  const [selected,setSelected]=useState<OrgRecord|null>(null);
+ const [newOpen,setNewOpen]=useState(false);
+ const [newName,setNewName]=useState("");
+ const [newTitle,setNewTitle]=useState("");
+ const [newArea,setNewArea]=useState("Finanzas");
+ const [newManager,setNewManager]=useState("Gabriel Sabogal");
+ const [newRole,setNewRole]=useState<AccessRole>("Colaborador");
  const areas=useMemo(()=>["Todas",...Array.from(new Set(rows.map(x=>x.area))).sort()], [rows]);
  const filtered=useMemo(()=>rows.filter(x=>(area==="Todas"||x.area===area)&&(!q||normalize(x.name+" "+x.title+" "+x.manager).includes(normalize(q)))),[rows,q,area]);
  const leaders=rows.filter(x=>x.role==="Líder"||x.role==="Dirección").length;
@@ -115,11 +121,12 @@ export default function OrganizationAdmin({page}:{page:string}){
  const active=rows.filter(x=>x.active&&!x.vacant).length;
  const save=(next:OrgRecord[])=>{setRows(next);localStorage.setItem("oc-org",JSON.stringify(next))};
  const update=(id:string,patch:Partial<OrgRecord>)=>{const next=rows.map(x=>x.id===id?{...x,...patch}:x);save(next);setSelected(s=>s?.id===id?{...s,...patch}:s)};
+ const createUser=(e:any)=>{e.preventDefault();if(!newName.trim()||!newTitle.trim())return;const rec:OrgRecord={id:"usr-"+Date.now(),name:newName.trim(),title:newTitle.trim(),area:newArea,manager:newManager,role:newRole,active:true,canAssign:newRole==="Líder"||newRole==="Dirección"||newRole==="Administrador",canCreateAreaGoals:newRole==="Líder"||newRole==="Dirección"||newRole==="Administrador"};save([...rows,rec]);setSelected(rec);setNewOpen(false);setNewName("");setNewTitle("")};
  const roots=rows.filter(x=>x.manager==="—");
  if(page==="Configuración")return <AdminConfig rows={rows}/>;
  if(page==="Estructura")return <AdminStructure rows={rows} roots={roots} onSelect={setSelected} selected={selected}/>;
  return <div className="oaPage">
-  <section className="oaHero"><div><span>ADMINISTRACIÓN</span><h2>Usuarios y estructura organizacional</h2><p>La jerarquía controla quién puede recibir, desdoblar y asignar objetivos dentro de la plataforma.</p></div><button type="button">＋ Nuevo usuario</button></section>
+  <section className="oaHero"><div><span>ADMINISTRACIÓN</span><h2>Usuarios y estructura organizacional</h2><p>La jerarquía controla quién puede recibir, desdoblar y asignar objetivos dentro de la plataforma.</p></div><button type="button" onClick={()=>setNewOpen(true)}>＋ Nuevo usuario</button></section>
   <div className="oaKpis"><article><b>{active}</b><span>usuarios activos</span></article><article><b>{leaders}</b><span>líderes con equipo</span></article><article><b>{areas.length-1}</b><span>áreas</span></article><article><b>{vacancies}</b><span>vacantes registradas</span></article></div>
   <section className="oaToolbar"><input value={q} onChange={e=>setQ(e.target.value)} placeholder="Buscar persona, puesto o jefe…"/><select value={area} onChange={e=>setArea(e.target.value)}>{areas.map(a=><option key={a}>{a}</option>)}</select><span>{filtered.length} registros</span></section>
   <div className="oaGrid">
@@ -131,6 +138,7 @@ export default function OrganizationAdmin({page}:{page:string}){
     <div className="oaRule"><b>Alcance de asignación</b><p>{selected.canAssign?"Puede asignar únicamente a personas que cuelguen de su estructura.":"No puede distribuir objetivos a subordinados."}</p></div>
    </>:<><span>SELECCIONA UN REGISTRO</span><h3>Administración contextual</h3><p>Selecciona una persona o posición para revisar jefe directo, rol y permisos.</p></>}</aside>
   </div>
+  {newOpen&&<div className="oaModalBackdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setNewOpen(false)}}><form className="oaModal" onSubmit={createUser}><div className="oaModalHead"><div><span>NUEVO USUARIO</span><h3>Alta en la estructura</h3><p>El acceso quedará ligado a su jefe directo y rol.</p></div><button type="button" onClick={()=>setNewOpen(false)}>×</button></div><label>Nombre<input value={newName} onChange={e=>setNewName(e.target.value)} required/></label><label>Puesto<input value={newTitle} onChange={e=>setNewTitle(e.target.value)} required/></label><div className="oaModalGrid"><label>Área<select value={newArea} onChange={e=>setNewArea(e.target.value)}>{areas.filter(a=>a!=="Todas").map(a=><option key={a}>{a}</option>)}</select></label><label>Jefe directo<select value={newManager} onChange={e=>setNewManager(e.target.value)}>{rows.filter(x=>!x.vacant).map(x=><option key={x.id}>{x.name}</option>)}</select></label></div><label>Rol<select value={newRole} onChange={e=>setNewRole(e.target.value as AccessRole)}><option>Dirección</option><option>Administrador</option><option>Líder</option><option>Colaborador</option></select></label><div className="oaModalActions"><button type="button" onClick={()=>setNewOpen(false)}>Cancelar</button><button type="submit">Crear usuario</button></div></form></div>}
  </div>
 }
 
